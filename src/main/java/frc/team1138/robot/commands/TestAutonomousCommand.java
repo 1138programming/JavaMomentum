@@ -41,9 +41,7 @@ public class TestAutonomousCommand extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		if(DistFromTarget <= 1.5)
-			return true;
-		return false;
+		return DistFromTarget <= 1.5;
 	}
 
 	// Called once after isFinished returns true

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 public class TurnWithGyro extends PIDCommand{
-	private static double P = 0.7 ,I =0.0 ,D = 0.0;
+	private static double P = 0.1 ,I =0.0 ,D = 0.0;
 	private PIDController turnController;
 
 	public TurnWithGyro() {
@@ -19,13 +19,16 @@ public class TurnWithGyro extends PIDCommand{
 		turnController.setOutputRange(-1, 1);
 		turnController.setAbsoluteTolerance(1.5);
 		turnController.setContinuous(true);
-		System.out.println("Inited");
 		Robot.SUB_DRIVE_BASE.resetGyro();
+		Robot.SUB_DRIVE_BASE.resetEncoders();
     }
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
+		Robot.SUB_DRIVE_BASE.resetGyro();
+		Robot.SUB_DRIVE_BASE.resetEncoders();
+		setTarget(65);
 	}
 	
 	@Override
@@ -65,20 +68,21 @@ public class TurnWithGyro extends PIDCommand{
 
 	@Override
 	protected void execute() {
-		double setAngle = SmartDashboard.getNumber("setAngle", 0);
-		//double kP = SmartDashboard.getNumber("kP", 1.0);
-
-		setTarget(setAngle);
+//		setTarget(45);
+//		double setAngle = SmartDashboard.getNumber("setAngle", 0);
+//		//double kP = SmartDashboard.getNumber("kP", 1.0);
+//
+//		setTarget(setAngle);
 		//turnController.setPID(kP,0,0);
-		SmartDashboard.putBoolean("tracking",true);
+//		SmartDashboard.putBoolean("tracking",true);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
 		System.out.println("On Target: " + turnController.onTarget());
-		return false;
-		//return turnController.onTarget();
+//		return false;
+		return turnController.onTarget();
 	}
 
 	public void setTarget(double angle){

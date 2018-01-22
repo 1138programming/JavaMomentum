@@ -63,6 +63,7 @@ public class SubDriveBase extends Subsystem{
 //		rightFrontBaseMotor.configEncoderCodesPerRev(4095);
 		leftFrontBaseMotor.getSensorCollection().setQuadraturePosition(0,0);
 		rightFrontBaseMotor.getSensorCollection().setQuadraturePosition(0,0);
+		leftFrontBaseMotor.setSensorPhase(true);
 		
 		// LiveWindow
 //       LiveWindow.addSensor("SubDriveBase", "Pigeon", (LiveWindowSendable) PigeonIMU);
@@ -99,14 +100,7 @@ public class SubDriveBase extends Subsystem{
     	
 		if(left > RobotMap.KDeadZoneLimit || left < -RobotMap.KDeadZoneLimit) 
 		{
-			
 			leftFrontBaseMotor.set(ControlMode.PercentOutput, left);
-			
-			
-			SmartDashboard.putNumber("leftFrontBaseMotor", leftFrontBaseMotor.getMotorOutputPercent()); 
-			SmartDashboard.putNumber("leftRearBaseMotor", leftRearBaseMotor.getMotorOutputPercent()); 
-			SmartDashboard.putNumber("leftFrontBaseMotor ID", leftFrontBaseMotor.getDeviceID()); 
-			SmartDashboard.putString("leftRearBaseMotor mode", leftRearBaseMotor.getControlMode().toString());
 		}
 		else
 		{
@@ -117,8 +111,6 @@ public class SubDriveBase extends Subsystem{
 		if(right > RobotMap.KDeadZoneLimit || right < -RobotMap.KDeadZoneLimit) 
 		{
 			rightFrontBaseMotor.set(ControlMode.PercentOutput, right);
-			SmartDashboard.putNumber("rightFrontBaseMotor", rightFrontBaseMotor.getMotorOutputPercent()); 
-			SmartDashboard.putNumber("rightRearBaseMotor", rightRearBaseMotor.getMotorOutputPercent()); 
 		}
 		else
 		{
@@ -168,9 +160,32 @@ public class SubDriveBase extends Subsystem{
 		return Math.abs(TargetAngle - ModifiedAngle); //Return the distance from the target angle
 	}
     
-//    public void drive(double right, double curve) { //TODO fix here!
+	public double UpdateForwardSpeed(double Target, double LogValue)
+	{
+		double RightEncoder = Math.abs(rightFrontBaseMotor.getSensorCollection().getQuadraturePosition());
+		double LeftEncoder = Math.abs(leftFrontBaseMotor.getSensorCollection().getQuadraturePosition());
+		double EncoderAverage = (RightEncoder + LeftEncoder) / 2;
+		double Speed = Math.log(Math.abs(Target - EncoderAverage) + 1) / Math.log(LogValue + 1);
+		Speed = Math.floor(Speed * 100) / 100;
+		SmartDashboard.putNumber("Right Encoder", RightEncoder);
+		SmartDashboard.putNumber("Left Encoder", LeftEncoder);
+		SmartDashboard.putNumber("Encoder Average", EncoderAverage);
+		if(Speed > 1)
+			Speed = 1;
+		if(-0.05 < Speed && Speed < 0.05)
+			Speed = 0;
+		if(Speed < -1)
+			Speed = -1;
+		SmartDashboard.putNumber("Forward Speed", Speed);
+		if(Target - EncoderAverage > 0)
+			tankDrive(Speed, Speed); //Drive forward
+		else
+			tankDrive(-Speed, -Speed); //Drive backwards
+		return Math.abs(Target - EncoderAverage);
+	}
+//    public void drive(double riouble curve) { //TODO fix here!
 //        final double leftOutput;
-//        final double rightOutput;
+//        final double rightOght, dutput;
 //        double m_sensitivity = 1.0;
 //        if (curve < 0) {
 //            double value = Math.log(-curve);
@@ -275,7 +290,7 @@ public class SubDriveBase extends Subsystem{
 		rightFrontBaseMotor.getSensorCollection().setQuadraturePosition(0,0);
 	}
     
-    // TODO FIX THIS
+    // TODO FIX THIS LIKE RN
     public void DriveForward(float distance, float speed) {
     	float encoderReference = leftFrontBaseMotor.getSensorCollection().getQuadraturePosition(); //Alex Harris fixed it
     	float encoderReference2 = rightFrontBaseMotor.getSensorCollection().getQuadraturePosition(); 
@@ -301,7 +316,7 @@ public class SubDriveBase extends Subsystem{
     
     public double getLeftEncoderValue()
     {
-    	return leftFrontBaseMotor.getSensorCollection().getQuadraturePosition();
+    	return -leftFrontBaseMotor.getSensorCollection().getQuadraturePosition(); //The negative sign is there to correct the encoder
     }
     
     public double getRightEncoderValue()

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team1138.robot.commands.AutonCommandGroup;
 import frc.team1138.robot.commands.DogTrack;
 import frc.team1138.robot.commands.ExampleCommand;
 import frc.team1138.robot.commands.TestAutonomousCommand;
@@ -43,8 +44,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		SUB_DRIVE_BASE = new SubDriveBase();
 		oi = new OI();
-		chooser.addDefault("DriveForward", new DriveForward());
-		//chooser.addDefault("Turn With Gyro", new TurnWithGyro());
+		//chooser.addDefault("AutonCommandGroup", new AutonCommandGroup());
+		//chooser.addDefault("DriveForward", new DriveForward());
+		chooser.addDefault("Turn With Gyro", new TurnWithGyro());
 		//chooser.addDefault("Test Auton", new TestAutonomousCommand()); //Change this from the default if I haven't already -Chris
 		SmartDashboard.putData("Autonomous Mode Chooser", chooser);
 		SmartDashboard.putData("Test Auton", new TestAutonomousCommand());
@@ -90,6 +92,7 @@ public class Robot extends IterativeRobot {
 		 */
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
+			Robot.SUB_DRIVE_BASE.resetEncoders();
 			autonomousCommand.start();
 	}
 
@@ -111,6 +114,7 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 		SmartDashboard.putNumber("setAngle", 0);
 		Robot.SUB_DRIVE_BASE.resetGyro();
+		Robot.SUB_DRIVE_BASE.resetEncoders();
 //		Command dogTrack = new DogTrack();
 //		dogTrack.start();
 	}
@@ -123,6 +127,8 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 //		SmartDashboard.putNumber("angle", Robot.SUB_DRIVE_BASE.getAngle());
 //		SmartDashboard.putBoolean("Running",true);
+		SmartDashboard.putNumber("Left", Robot.SUB_DRIVE_BASE.getLeftEncoderValue());
+		SmartDashboard.putNumber("Right", Robot.SUB_DRIVE_BASE.getRightEncoderValue());
 	}
 
 	/**
