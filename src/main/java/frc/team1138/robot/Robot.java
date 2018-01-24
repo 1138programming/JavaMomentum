@@ -1,6 +1,7 @@
 
 package frc.team1138.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 //import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -46,8 +47,7 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		//chooser.addDefault("AutonCommandGroup", new AutonCommandGroup());
 		//chooser.addDefault("DriveForward", new DriveForward());
-		chooser.addDefault("Turn With Gyro", new TurnWithGyro());
-		//chooser.addDefault("Test Auton", new TestAutonomousCommand()); //Change this from the default if I haven't already -Chris
+		//chooser.addDefault("Turn With Gyro", new TurnWithGyro());
 		SmartDashboard.putData("Autonomous Mode Chooser", chooser);
 		SmartDashboard.putData("Test Auton", new TestAutonomousCommand());
 //		SmartDashboard.putData("PID TURN", new TurnWithGyro(0));
@@ -83,7 +83,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
+		//autonomousCommand1 = chooser.getSelected();
+		//autonomousCommand2 = chooser.getSelected();
+		String gameData;
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		SmartDashboard.putString("Game String", gameData);
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -91,9 +95,20 @@ public class Robot extends IterativeRobot {
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
 		// schedule the autonomous command (example)
+		if(gameData.charAt(0) == 'L') //TODO fix the FMS loops
+		{
+			autonomousCommand = new DriveForward();
+		}
+		else
+		{
+			autonomousCommand = new TurnWithGyro();
+		}
+		
 		if (autonomousCommand != null)
+		{
 			Robot.SUB_DRIVE_BASE.resetEncoders();
 			autonomousCommand.start();
+		}
 	}
 
 	/**
@@ -110,8 +125,14 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
+//		if (autonomousCommand1 != null)
+//		{
+//			autonomousCommand1.cancel();
+//		}
+//		if(autonomousCommand2 != null)
+//		{
+//			autonomousCommand2.cancel();
+//		}
 		SmartDashboard.putNumber("setAngle", 0);
 		Robot.SUB_DRIVE_BASE.resetGyro();
 		Robot.SUB_DRIVE_BASE.resetEncoders();

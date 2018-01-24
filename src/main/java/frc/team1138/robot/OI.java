@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 
 public class OI {
-	private Joystick leftController, rightController, xBoxController; 
+	public static final int KLogitechController = 3; //Base driver
+	public static final double KXboxDeadZoneLimit = 0.2;
+	
+	private Joystick leftController, rightController, xBoxController, logitechController; 
 	private JoystickButton shiftBtn, liftBtn; // Logitech Buttons 
 	private JoystickButton btnA, btnB, btnX, btnY, btnLB, btnRB;
 	
@@ -20,6 +23,7 @@ public class OI {
 		leftController = new Joystick(RobotMap.KLeftJoystick);
 		rightController = new Joystick(RobotMap.KRightJoystick);
 		xBoxController = new Joystick(RobotMap.KXBoxController);
+		logitechController = new Joystick(KLogitechController);
 
 		//Logitech Buttons
 		shiftBtn = new JoystickButton(leftController, 1); //Shifts the Base from Low Gear to High Gear and vice versa
@@ -44,11 +48,27 @@ public class OI {
 	}
 	
 	public double getRightControllerY() {			//Right controller is right side drive
-		return rightController.getY();
+		if(logitechController.getY() < -KXboxDeadZoneLimit || logitechController.getY() > KXboxDeadZoneLimit)
+		{
+			return -logitechController.getY(); //TODO check if it's twist for z-rotate axis
+			//return leftController.getY();
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	public double getLeftControllerY() {			//Left controller is left side drive
-		return leftController.getY();
+		if(logitechController.getThrottle() < -KXboxDeadZoneLimit || logitechController.getThrottle() > KXboxDeadZoneLimit)
+		{
+			return -logitechController.getThrottle(); //TODO check if it's twist for z-rotate axis
+			//return rightController.getY();
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	public boolean getLeftTrigger() {				//left controller's trigger is the shifter
