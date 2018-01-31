@@ -97,6 +97,8 @@ public class DriveForward extends PIDCommand
 	protected boolean isFinished()
 	{
 		// System.out.println("On Target: " + driveController.onTarget());
+		SmartDashboard.putBoolean("On Target", driveController.onTarget());
+		SmartDashboard.putNumber("Error", this.returnPIDInput() - this.getSetpoint());
 		return driveController.onTarget();
 		// return DistanceToTarget < 20;
 		// return driveController.onTarget();

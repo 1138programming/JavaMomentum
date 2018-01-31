@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class OI
 {
-	public static final int KLogitechController = 3; // Base driver
+	public static final int KLogitechController = 2; // Base driver
 	public static final double KXboxDeadZoneLimit = 0.2;
 
 	private Joystick leftController, rightController, xBoxController, logitechController;

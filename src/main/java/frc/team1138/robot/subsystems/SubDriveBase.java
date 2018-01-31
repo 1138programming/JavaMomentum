@@ -65,7 +65,7 @@ public class SubDriveBase extends Subsystem
 		// rightFrontBaseMotor.configEncoderCodesPerRev(4095);
 		leftFrontBaseMotor.getSensorCollection().setQuadraturePosition(0, 0);
 		rightFrontBaseMotor.getSensorCollection().setQuadraturePosition(0, 0);
-		leftFrontBaseMotor.setSensorPhase(true);
+		leftFrontBaseMotor.setSensorPhase(false);
 
 		// LiveWindow
 		// LiveWindow.addSensor("SubDriveBase", "Pigeon", (LiveWindowSendable)
@@ -124,6 +124,8 @@ public class SubDriveBase extends Subsystem
 		{
 			rightFrontBaseMotor.set(ControlMode.PercentOutput, 0);
 		}
+		SmartDashboard.putNumber("Right Encoder", rightFrontBaseMotor.getSensorCollection().getQuadraturePosition());
+		SmartDashboard.putNumber("Left Encoder", leftFrontBaseMotor.getSensorCollection().getQuadraturePosition());
 	}
 
 	// TODO FIX THIS!

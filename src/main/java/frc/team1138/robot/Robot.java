@@ -103,7 +103,7 @@ public class Robot extends IterativeRobot
 		// schedule the autonomous command (example)
 		if (gameData.charAt(0) == 'L') // TODO fix the FMS loops
 		{
-			autonomousCommand = new DriveForward();
+			autonomousCommand = new AutonCommandGroup();
 		}
 		else
 		{

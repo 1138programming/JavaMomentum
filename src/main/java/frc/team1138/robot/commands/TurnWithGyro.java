@@ -79,11 +79,12 @@ public class TurnWithGyro extends PIDCommand
 	@Override
 	protected void execute()
 	{
-		// setTarget(45);
-		// double setAngle = SmartDashboard.getNumber("setAngle", 0);
-		// //double kP = SmartDashboard.getNumber("kP", 1.0);
+		setTarget(90);
+		//double setAngle = SmartDashboard.getNumber("setAngle", 0);
+		//double kP = SmartDashboard.getNumber("kP", 1.0);
 		//
-		// setTarget(setAngle);
+		//setTarget(setAngle);
+		turnController.setPID(0.1,0,0);
 		// turnController.setPID(kP,0,0);
 		// SmartDashboard.putBoolean("tracking",true);
 	}

@@ -15,6 +15,7 @@ public class AutonCommandGroup extends CommandGroup
 	{
 		requires(Robot.SUB_DRIVE_BASE);
 		oi = new OI();
+		//addSequential(new TurnWithGyro());
 		addSequential(new DriveForward());
 		addSequential(new TurnWithGyro());
 	}
