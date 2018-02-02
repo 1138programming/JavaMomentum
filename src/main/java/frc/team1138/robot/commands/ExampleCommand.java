@@ -2,7 +2,7 @@ package frc.team1138.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-import frc.team1138.robot.Robot;
+// import frc.team1138.robot.Robot;
 
 /**
  * @author Zheyuan Hu
@@ -13,7 +13,7 @@ public class ExampleCommand extends Command
 	public ExampleCommand()
 	{
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.exampleSubsystem);
+		//requires(Robot.exampleSubsystem);
 	}
 
 	// Called just before this Command runs the first time

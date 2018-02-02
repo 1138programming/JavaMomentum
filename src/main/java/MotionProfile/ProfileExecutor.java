@@ -110,7 +110,8 @@ public class ProfileExecutor {
             point.position = positionRot * profile.getSensorUnitsPerRotation(); //Convert Revolutions to Units
             point.velocity = velocityRPM * profile.getSensorUnitsPerRotation() / 600.0; //Convert RPM to Units/100ms
             point.headingDeg = 0; /* future feature - not used in this example*/
-            point.profileSlotSelect = 0; /* which set of gains would you like to use [0,3]? */
+            point.profileSlotSelect0 = 0; 
+            point.profileSlotSelect1 = 0;
             point.zeroPos = false;
             point.isLastPoint = false;
 
