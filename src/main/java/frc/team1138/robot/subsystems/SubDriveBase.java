@@ -3,15 +3,16 @@ package frc.team1138.robot.subsystems;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team1138.robot.Robot;
 import frc.team1138.robot.RobotMap;
 import frc.team1138.robot.commands.DriveWithJoy;
 
+import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 //import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -26,6 +27,7 @@ public class SubDriveBase extends Subsystem
 	private TalonSRX leftRearBaseMotor;
 	private PigeonIMU PigeonIMU;
 	private DoubleSolenoid shifterSolenoid, liftSolenoid;
+	private SetValueMotionProfile setOutput = SetValueMotionProfile.Disable; 
 	// private AHRS gyroAccel; deprecated
 
 	public SubDriveBase()
@@ -65,7 +67,8 @@ public class SubDriveBase extends Subsystem
 		// rightFrontBaseMotor.configEncoderCodesPerRev(4095);
 		leftFrontBaseMotor.getSensorCollection().setQuadraturePosition(0, 0);
 		rightFrontBaseMotor.getSensorCollection().setQuadraturePosition(0, 0);
-		leftFrontBaseMotor.setSensorPhase(false);
+		leftFrontBaseMotor.setSensorPhase(true);
+		rightFrontBaseMotor.setSensorPhase(true);
 
 		// LiveWindow
 		// LiveWindow.addSensor("SubDriveBase", "Pigeon", (LiveWindowSendable)
@@ -364,5 +367,21 @@ public class SubDriveBase extends Subsystem
 	public Value getLiftState()
 	{
 		return liftSolenoid.get();
+	}
+	
+	public void setLeftMotionControl(ControlMode mode, double value) {
+		leftFrontBaseMotor.set(mode, value);
+	}
+	
+	public void setRightMotionControl(ControlMode mode, double value) {
+		rightFrontBaseMotor.set(mode, value);
+	}
+	
+	public TalonSRX getRightMotor() {
+		return this.rightFrontBaseMotor; 
+	}
+	
+	public TalonSRX getLeftMotor() {
+		return this.leftFrontBaseMotor; 
 	}
 }

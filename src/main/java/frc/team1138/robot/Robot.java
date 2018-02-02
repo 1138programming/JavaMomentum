@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team1138.robot.commands.AutonCommandGroup;
 import frc.team1138.robot.commands.DogTrack;
 import frc.team1138.robot.commands.ExampleCommand;
+import frc.team1138.robot.commands.MotionProfileTest;
 import frc.team1138.robot.commands.TestAutonomousCommand;
 import frc.team1138.robot.commands.TurnWithGyro;
 import frc.team1138.robot.subsystems.ExampleSubsystem;
@@ -31,7 +32,6 @@ import frc.team1138.robot.commands.DriveForward;
  */
 public class Robot extends IterativeRobot
 {
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static SubDriveBase SUB_DRIVE_BASE;
 	private static OI oi;
 	private Command autonomousCommand;
@@ -51,6 +51,7 @@ public class Robot extends IterativeRobot
 		// chooser.addDefault("AutonCommandGroup", new AutonCommandGroup());
 		// chooser.addDefault("DriveForward", new DriveForward());
 		// chooser.addDefault("Turn With Gyro", new TurnWithGyro());
+		chooser.addDefault("Motion Profile Tester", new MotionProfileTest());
 		SmartDashboard.putData("Autonomous Mode Chooser", chooser);
 		SmartDashboard.putData("Test Auton", new TestAutonomousCommand());
 		// SmartDashboard.putData("PID TURN", new TurnWithGyro(0));
@@ -101,14 +102,14 @@ public class Robot extends IterativeRobot
 		 * ExampleCommand(); break; }
 		 */
 		// schedule the autonomous command (example)
-		if (gameData.charAt(0) == 'L') // TODO fix the FMS loops
-		{
-			autonomousCommand = new AutonCommandGroup();
-		}
-		else
-		{
-			autonomousCommand = new TurnWithGyro();
-		}
+//		if (gameData.charAt(0) == 'L') // TODO fix the FMS loops
+//		{
+//			autonomousCommand = new AutonCommandGroup();
+//		}
+//		else
+//		{
+//			autonomousCommand = new TurnWithGyro();
+//		}
 
 		if (autonomousCommand != null)
 		{
