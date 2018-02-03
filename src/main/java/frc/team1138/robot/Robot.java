@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team1138.robot.commands.TestAutonomousCommand;
 import frc.team1138.robot.commands.TurnWithGyro;
 import frc.team1138.robot.subsystems.ExampleSubsystem;
@@ -146,5 +147,6 @@ public class Robot extends IterativeRobot
 	@Override
 	public void testPeriodic()
 	{
+		Scheduler.getInstance().run();
 	}
 }
