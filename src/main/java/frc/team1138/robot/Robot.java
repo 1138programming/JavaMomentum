@@ -49,6 +49,8 @@ public class Robot extends IterativeRobot
 		// SmartDashboard.putData("PID TURN", new TurnWithGyro(0));
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		// Robot.SUB_DRIVE_BASE.resetGyro(); // reset Gyro at the start of the Robot
+		
+		PowerDistributionPanel pdp = new PowerDistributionPanel();
 	}
 
 	/**
