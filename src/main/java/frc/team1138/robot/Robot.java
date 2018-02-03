@@ -146,5 +146,11 @@ public class Robot extends IterativeRobot
 	@Override
 	public void testPeriodic()
 	{
+		LiveWindow.run(); // updates LiveWindow
+		// tenative sticky fault fix
+		if (pdp.getPDPVoltage(1) < 6.5) {
+			pdp.clearPDPStickyFaults(1);
+			SmartDashboard.putNumber("Low Voltage - Sticky Faults", pdp.getPDPVoltage(1));
+		}
 	}
 }
