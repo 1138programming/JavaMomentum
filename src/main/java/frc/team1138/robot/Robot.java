@@ -1,9 +1,12 @@
 
 package frc.team1138.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 //import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Command;
 // import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -13,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import frc.team1138.robot.commands.AutonCommandGroup;
 // import frc.team1138.robot.commands.DogTrack;
 // import frc.team1138.robot.commands.ExampleCommand;
-import frc.team1138.robot.commands.MotionProfileTest;
 import frc.team1138.robot.commands.TestAutonomousCommand;
 import frc.team1138.robot.commands.TurnWithGyro;
 // import frc.team1138.robot.subsystems.ExampleSubsystem;
@@ -37,8 +39,10 @@ public class Robot extends IterativeRobot
 	private Command autonomousCommand;
 	private SendableChooser<Command> chooser = new SendableChooser<>();
 	// private SendableChooser chooser;
-	private TurnWithGyro turn;
-
+	// private TurnWithGyro turn;
+	// private Ultrasonic ultra;
+	// private DigitalOutput ping;
+	// private DigitalInput echo;
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
@@ -48,15 +52,22 @@ public class Robot extends IterativeRobot
 	{
 		SUB_DRIVE_BASE = new SubDriveBase();
 		oi = new OI();
+		// ping = new DigitalOutput(3);
+		// echo = new DigitalInput(2);
+		// ultra = new Ultrasonic(ping, echo);
+		// ultra.setEnabled(true);
+		// ultra.setAutomaticMode(true);
 		// chooser.addDefault("AutonCommandGroup", new AutonCommandGroup());
 		// chooser.addDefault("DriveForward", new DriveForward());
 		// chooser.addDefault("Turn With Gyro", new TurnWithGyro());
-		chooser.addDefault("Motion Profile Tester", new MotionProfileTest());
 		SmartDashboard.putData("Autonomous Mode Chooser", chooser);
 		SmartDashboard.putData("Test Auton", new TestAutonomousCommand());
 		// SmartDashboard.putData("PID TURN", new TurnWithGyro(0));
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		// Robot.SUB_DRIVE_BASE.resetGyro(); // reset Gyro at the start of the Robot
+		SmartDashboard.putNumber("Left kP", 0);
+        SmartDashboard.putNumber("Left kI", 0);
+        SmartDashboard.putNumber("Left kD", 0);
 	}
 
 	/**
@@ -147,6 +158,7 @@ public class Robot extends IterativeRobot
 		Robot.SUB_DRIVE_BASE.resetEncoders();
 		// Command dogTrack = new DogTrack();
 		// dogTrack.start();
+		// Robot.SUB_DRIVE_BASE.getLeftMotor().config_kF(0, 0.4546666667, Constants.kTimeoutMs);
 	}
 
 	/**
@@ -158,8 +170,14 @@ public class Robot extends IterativeRobot
 		Scheduler.getInstance().run();
 		// SmartDashboard.putNumber("angle", Robot.SUB_DRIVE_BASE.getAngle());
 		// SmartDashboard.putBoolean("Running",true);
-		SmartDashboard.putNumber("Left", Robot.SUB_DRIVE_BASE.getLeftEncoderValue());
-		SmartDashboard.putNumber("Right", Robot.SUB_DRIVE_BASE.getRightEncoderValue());
+		// SmartDashboard.putBoolean("ultra enabled", ultra.isEnabled());
+		// SmartDashboard.putNumber("Ultra MM", ultra.getRangeMM());
+		// SmartDashboard.putNumber("Ultra INC", ultra.getRangeInches());
+		// SmartDashboard.putBoolean("ultra RANGE", ultra.isRangeValid());
+		// SmartDashboard.putBoolean("ping", ping.get());
+		// SmartDashboard.putBoolean("echo", echo.get());
+		SmartDashboard.putNumber("Right Encoder", Robot.SUB_DRIVE_BASE.getRightEncoderValue());
+		SmartDashboard.putNumber("Left Encoder", Robot.SUB_DRIVE_BASE.getLeftEncoderValue());
 	}
 
 	/**

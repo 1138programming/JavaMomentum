@@ -5,17 +5,17 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team1138.robot.RobotMap;
 import frc.team1138.robot.commands.DriveWithJoy;
-
-import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 //import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 /**
  * @author Zheyuan Hu
@@ -23,11 +23,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class SubDriveBase extends Subsystem
 {
-	private TalonSRX leftFrontBaseMotor, rightFrontBaseMotor, rightRearBaseMotor, gyroTalon;
+	private WPI_TalonSRX leftFrontBaseMotor, rightFrontBaseMotor;
+	private TalonSRX rightRearBaseMotor, gyroTalon;
 	private TalonSRX leftRearBaseMotor;
-	private PigeonIMU PigeonIMU;
+	// private PigeonIMU PigeonIMU;
 	private DoubleSolenoid shifterSolenoid, liftSolenoid;
-	private SetValueMotionProfile setOutput = SetValueMotionProfile.Disable; 
 	// private AHRS gyroAccel; deprecated
 
 	public SubDriveBase()
@@ -35,17 +35,16 @@ public class SubDriveBase extends Subsystem
 		// Gyro & Accel *Note this declaration needs to come before the motor
 		// declarations
 		// gyroAccel = new AHRS(Port.kMXP);
-		gyroTalon = new TalonSRX(3);
+		// gyroTalon = new TalonSRX(3);
 		// Motors
 		// master motors
-		leftFrontBaseMotor = new TalonSRX(RobotMap.KLeftFrontBaseTalon);
-		rightFrontBaseMotor = new TalonSRX(RobotMap.KRightFrontBaseTalon);
+		leftFrontBaseMotor = new WPI_TalonSRX(RobotMap.KLeftFrontBaseTalon);
+		rightFrontBaseMotor = new WPI_TalonSRX(RobotMap.KRightFrontBaseTalon);
 		// slave motors
 		leftRearBaseMotor = new TalonSRX(RobotMap.KLeftRearBaseTalon);
 		rightRearBaseMotor = new TalonSRX(RobotMap.KRightRearBaseTalon);
 		// Config the masters
-		leftFrontBaseMotor.setInverted(true);
-		leftRearBaseMotor.setInverted(true);
+		
 		// initSafeMotor();
 		// Config the slaves
 		leftRearBaseMotor.set(ControlMode.Follower, leftFrontBaseMotor.getDeviceID());
@@ -55,9 +54,9 @@ public class SubDriveBase extends Subsystem
 		shifterSolenoid = new DoubleSolenoid(RobotMap.KShifterSolenoid1, RobotMap.KShifterSolenoid2);
 		liftSolenoid = new DoubleSolenoid(RobotMap.KLiftSolenoid1, RobotMap.KLiftSolenoid2);
 
-		PigeonIMU = new PigeonIMU(gyroTalon);
-		SmartDashboard.putNumber("Navx Connection: ", PigeonIMU.getFirmwareVersion());
-		PigeonIMU.setYaw(0, 0);
+		// PigeonIMU = new PigeonIMU(gyroTalon);
+		// SmartDashboard.putNumber("Navx Connection: ", PigeonIMU.getFirmwareVersion());
+		// PigeonIMU.setYaw(0, 0);
 		// gyroAccel.zeroYaw();
 
 		// Encoders
@@ -67,21 +66,18 @@ public class SubDriveBase extends Subsystem
 		// rightFrontBaseMotor.configEncoderCodesPerRev(4095);
 		leftFrontBaseMotor.getSensorCollection().setQuadraturePosition(0, 0);
 		rightFrontBaseMotor.getSensorCollection().setQuadraturePosition(0, 0);
+		
 		leftFrontBaseMotor.setSensorPhase(true);
 		rightFrontBaseMotor.setSensorPhase(true);
 
-		// LiveWindow
-		// LiveWindow.addSensor("SubDriveBase", "Pigeon", (LiveWindowSendable)
-		// PigeonIMU);
-		// LiveWindow.addSensor("SubDriveBase", "Gyro", gyroAccel);
-		// LiveWindow.addActuator("SubDriveBase", "Left Front Motor",
-		// leftFrontBaseMotor);
-		// LiveWindow.addActuator("SubDriveBase", "Right Front Motor",
-		// rightFrontBaseMotor);
-		// LiveWindow.addActuator("SubDriveBase", "Left Rear Motor", leftRearBaseMotor);
-		// LiveWindow.addActuator("SubDriveBase", "Right Rear Motor",
-		// rightRearBaseMotor);
-		// LiveWindow.add(leftRearBaseMotor.init);
+		leftFrontBaseMotor.setInverted(false);
+		leftRearBaseMotor.setInverted(false);
+		rightFrontBaseMotor.setInverted(true);
+		rightRearBaseMotor.setInverted(true);
+
+		leftFrontBaseMotor.setName("SubDriveBase", "Left Front Motor");
+		rightFrontBaseMotor.setName("SubDriveBase", "Right Front Motor");
+		LiveWindow.setEnabled(true);
 	}
 
 	public void initDefaultCommand()
@@ -128,7 +124,7 @@ public class SubDriveBase extends Subsystem
 			rightFrontBaseMotor.set(ControlMode.PercentOutput, 0);
 		}
 		SmartDashboard.putNumber("Right Encoder", rightFrontBaseMotor.getSensorCollection().getQuadraturePosition());
-		SmartDashboard.putNumber("Left Encoder", leftFrontBaseMotor.getSensorCollection().getQuadraturePosition());
+		SmartDashboard.putNumber("Left Encoder", leftFrontBaseMotor.getSelectedSensorPosition(0));
 	}
 
 	// TODO FIX THIS!
@@ -312,7 +308,7 @@ public class SubDriveBase extends Subsystem
 	 */
 	public void resetGyro()
 	{
-		PigeonIMU.setYaw(0, 0);
+		// PigeonIMU.setYaw(0, 0);
 		// gyroAccel.zeroYaw();
 	}
 
@@ -345,20 +341,19 @@ public class SubDriveBase extends Subsystem
 	public double getAngle()
 	{
 		double[] ypr = new double[3];
-		PigeonIMU.getYawPitchRoll(ypr);
+		// PigeonIMU.getYawPitchRoll(ypr);
 		return (-ypr[0]);
 		// return gyroAccel.getAngle();
 	}
 
 	public double getLeftEncoderValue()
 	{
-		return -leftFrontBaseMotor.getSensorCollection().getQuadraturePosition(); // The negative sign is there to
-																					// correct the encoder
+		return leftFrontBaseMotor.getSelectedSensorPosition(0);
 	}
 
 	public double getRightEncoderValue()
 	{
-		return rightFrontBaseMotor.getSensorCollection().getQuadraturePosition();
+		return rightFrontBaseMotor.getSelectedSensorPosition(0);
 	}
 
 	/**

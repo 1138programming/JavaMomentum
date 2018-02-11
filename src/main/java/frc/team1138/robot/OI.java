@@ -1,8 +1,10 @@
 package frc.team1138.robot;
 
 import frc.team1138.robot.commands.LiftBase;
+import frc.team1138.robot.commands.TestMotionProfile;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -19,7 +21,7 @@ public class OI
 
 	private Joystick leftController, rightController, xBoxController, logitechController;
 	private JoystickButton shiftBtn, liftBtn; // Logitech Buttons
-	private JoystickButton btnA, btnB, btnX, btnY, btnLB, btnRB;
+	private JoystickButton btnA, btnB, btnX, btnY, btnLB, btnRB, btnMP;
 
 	public OI()
 	{
@@ -40,6 +42,9 @@ public class OI
 		btnLB = new JoystickButton(xBoxController, RobotMap.KLeftBumper); // Decrease Flywheel Speed
 		btnRB = new JoystickButton(xBoxController, RobotMap.KRightBumpter); // Increase Flywheel Speed
 
+		btnMP = new JoystickButton(logitechController, 1);
+
+		btnMP.whenPressed(new TestMotionProfile());
 		// shiftBtn.whenPressed(new TurnWithGyro());
 		liftBtn.whenPressed(new LiftBase());
 		// buttonX->WhenPressed(new EngageShooter());
@@ -54,10 +59,10 @@ public class OI
 
 	public double getRightControllerY()
 	{ // Right controller is right side drive
-		if (logitechController.getY() < -KXboxDeadZoneLimit || logitechController.getY() > KXboxDeadZoneLimit)
+		if (logitechController.getThrottle() < -KXboxDeadZoneLimit || logitechController.getThrottle() > KXboxDeadZoneLimit)
 		{
-			return -logitechController.getY(); // TODO check if it's twist for z-rotate axis
-			// return leftController.getY();
+			SmartDashboard.putNumber("Right Controller: ", -logitechController.getThrottle());
+			return -logitechController.getThrottle(); // TODO check if it's twist for z-rotate axis
 		}
 		else
 		{
@@ -67,11 +72,10 @@ public class OI
 
 	public double getLeftControllerY()
 	{ // Left controller is left side drive
-		if (logitechController.getThrottle() < -KXboxDeadZoneLimit
-				|| logitechController.getThrottle() > KXboxDeadZoneLimit)
+		if (logitechController.getY() < -KXboxDeadZoneLimit || logitechController.getY() > KXboxDeadZoneLimit)
 		{
-			return -logitechController.getThrottle(); // TODO check if it's twist for z-rotate axis
-			// return rightController.getY();
+			SmartDashboard.putNumber("Left Controller: ", -logitechController.getY());
+			return -logitechController.getY(); // TODO check if it's twist for z-rotate axis
 		}
 		else
 		{
@@ -99,5 +103,4 @@ public class OI
 	{
 		return (-xBoxController.getRawAxis(5));
 	}
-
 }
