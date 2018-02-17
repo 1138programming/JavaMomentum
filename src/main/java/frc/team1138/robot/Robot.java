@@ -99,6 +99,12 @@ public class Robot extends IterativeRobot {
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		
+		try {
+			ledSubsystem.setMode(LEDModes.Idle);
+		} catch (IOException e) {
+			System.out.println(e);
+		}
 	}
 
 	/**
@@ -118,6 +124,11 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		SmartDashboard.putNumber("setAngle", 0);
+		try {
+			ledSubsystem.setMode(LEDModes.Idle);
+		} catch (IOException e) {
+			System.out.println(e);
+		}
 		Robot.SUB_DRIVE_BASE.resetGyro();
 //		Command dogTrack = new DogTrack();
 //		dogTrack.start();
@@ -142,7 +153,7 @@ public class Robot extends IterativeRobot {
 		Robot.SUB_DRIVE_BASE.resetGyro();
 		
 		try {
-			ledSubsystem.setMode(LEDModes.Cube);
+			ledSubsystem.setMode(LEDModes.Idle);
 		} catch (IOException e) {
 			System.out.println(e);
 		}

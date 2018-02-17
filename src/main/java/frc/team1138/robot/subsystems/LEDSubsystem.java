@@ -17,7 +17,9 @@ public class LEDSubsystem extends Subsystem
 {
 	public enum LEDModes {
 		Off			((byte) 0),
-		Cube		((byte) 1);
+		Idle		((byte) 1),
+		Cube		((byte) 2),
+		Rung		((byte) 3);
 
 	    private final byte value;
 	    private LEDModes(byte value) {
@@ -76,18 +78,18 @@ public class LEDSubsystem extends Subsystem
 		//Serial.write(toSend, 1);
 		//System.out.println(Serial.read(1));
 		
-		if (Wire != null && toSend != null && received != null) {
+		if (Wire != null && toSend != null) {
 			// Check that we have a proper I2C connection to avoid
 			// NullPointerExceptions
-			Wire.transaction(toSend, 1, received, 0);
+			Wire.writeBulk(toSend, 1);
 		}
 		
-		// Send a byte, and receive the response from the arduino
-		//Wire.transaction(toSend, 1, received, 1);
+		// Receive a response to check for an error
+		Wire.readOnly(received, 1);
 		
 		// Do we have an error?
-		//if (received[0] == LEDResults.Error.getValue()) {
-		//	throw new IOException();
-		//}
+		if (received[0] == LEDResults.Error.getValue()) {
+			throw new IOException("Error from rioDuino");
+		}
 	}
 }
