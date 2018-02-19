@@ -1,17 +1,18 @@
 package frc.team1138.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.team1138.robot.commands.UpdateLedStatus;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
 import java.io.IOException;
 
-import edu.wpi.first.wpilibj.SerialPort;
-
 
 /**
 * The LEDSubsystem class
+* 
+* Edward Pedemonte
 */ 
 public class LEDSubsystem extends Subsystem
 {
@@ -68,6 +69,9 @@ public class LEDSubsystem extends Subsystem
 	public void initDefaultCommand()
 	{
 		// We don't actually have a default command; leave this blank
+		UpdateLedStatus defaultCommand = new UpdateLedStatus();
+		defaultCommand.setRunWhenDisabled(true);
+		setDefaultCommand(defaultCommand);
 	}
 	
 	public void setMode(LEDModes mode) throws IOException {

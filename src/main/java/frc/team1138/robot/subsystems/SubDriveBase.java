@@ -126,6 +126,14 @@ public class SubDriveBase extends Subsystem{
 		}
 	}
     
+    public boolean getLeftFrontRevLimitSwitchClosed() {
+    	return leftFrontBaseMotor.getSensorCollection().isRevLimitSwitchClosed();
+    }
+    
+    public boolean getLeftFrontFwdLimitSwitchClosed() {
+    	return leftFrontBaseMotor.getSensorCollection().isFwdLimitSwitchClosed();
+    }
+    
     // TODO FIX THIS!
 	public double UpdateTurnSpeed(double TargetAngle, double LogValue)
 	{
