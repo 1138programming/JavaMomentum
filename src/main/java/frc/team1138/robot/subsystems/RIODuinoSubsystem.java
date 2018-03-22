@@ -10,11 +10,11 @@ import java.io.IOException;
 
 
 /**
-* The LEDSubsystem class
+* The RIODuinoSubsystem class
 * 
 * Edward Pedemonte
 */ 
-public class LEDSubsystem extends Subsystem
+public class RIODuinoSubsystem extends Subsystem
 {
 	public enum LEDModes {
 		Off			((byte) 0),
@@ -32,12 +32,12 @@ public class LEDSubsystem extends Subsystem
 	    }
 	}
 	
-	public enum LEDResults {
+	private enum RIODuinoUserCodeStatus {
 		Success		((byte) 0),
 		Error		((byte) 1);
 		
 	    private final byte value;
-	    private LEDResults(byte value) {
+	    private RIODuinoUserCodeStatus(byte value) {
 	        this.value = value;
 	    }
 
@@ -45,20 +45,35 @@ public class LEDSubsystem extends Subsystem
 	        return value;
 	    }
 	}
+	
+	private enum DeviceByte {
+		NeoPixel	((byte) 0),
+		Ultrasonic	((byte) 1);
+		
+		private final byte value;
+		private DeviceByte(byte value) {
+			this.value = value;
+		}
+		
+		public byte getValue() {
+			return value;
+		}
+	}
 
 	// Initialize the I2C port
 	private final I2C Wire;// = new I2C(Port.kMXP, 1138);
 	//private final SerialPort Serial;
 	private byte[] received;
 	
-	public LEDSubsystem()
+	public RIODuinoSubsystem()
 	{
 		System.out.println("LED Subsystem Initializing...");
-		received = new byte[1];
+		received = new byte[2];
 		Wire = new I2C(Port.kMXP, 4);
 		
 		try {
-			setMode(LEDModes.Off);
+			// Default to Off Mode
+			setLEDMode(LEDModes.Off);
 			System.out.println("LED Subsystem Initialized!");
 		} catch (IOException e) {
 			System.out.println("LED Subsystem Failed!");
@@ -68,16 +83,16 @@ public class LEDSubsystem extends Subsystem
 
 	public void initDefaultCommand()
 	{
-		// We don't actually have a default command; leave this blank
 		UpdateLedStatus defaultCommand = new UpdateLedStatus();
 		defaultCommand.setRunWhenDisabled(true);
 		setDefaultCommand(defaultCommand);
 	}
 	
-	public void setMode(LEDModes mode) throws IOException {
+	public void setLEDMode(LEDModes mode) throws IOException {
 		// Turn the mode into a byte to send (from the enum declaration)
-		byte[] toSend = new byte[1];
-		toSend[0] = mode.getValue();
+		byte[] toSend = new byte[2];
+		toSend[0] = DeviceByte.NeoPixel.getValue();
+		toSend[1] = mode.getValue();
 		
 		//Serial.write(toSend, 1);
 		//System.out.println(Serial.read(1));
@@ -85,15 +100,30 @@ public class LEDSubsystem extends Subsystem
 		if (Wire != null && toSend != null) {
 			// Check that we have a proper I2C connection to avoid
 			// NullPointerExceptions
-			Wire.writeBulk(toSend, 1);
+			Wire.writeBulk(toSend, 2);
 		}
 		
 		// Receive a response to check for an error
 		Wire.readOnly(received, 1);
 		
 		// Do we have an error?
-		if (received[0] == LEDResults.Error.getValue()) {
-			throw new IOException("Error from rioDuino");
+		if (received[0] == RIODuinoUserCodeStatus.Error.getValue()) {
+			throw new IOException("User Code Error from rioDuino");
 		}
+	}
+	
+	public int getUltrasonic() throws IOException {
+		byte[] toSend = new byte[1];
+		toSend[0] = DeviceByte.Ultrasonic.getValue();
+		if (Wire != null && toSend != null) {
+			// Check that we have a proper I2C connection to avoid
+			// NullPointerExceptions
+			Wire.writeBulk(toSend, 1);
+		}
+		Wire.readOnly(received, 2);
+		if (received[0] == RIODuinoUserCodeStatus.Error.getValue()) {
+			throw new IOException("User Code Error from rioDuino");
+		}
+		return (int) received[1];
 	}
 }

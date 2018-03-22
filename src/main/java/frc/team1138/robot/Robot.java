@@ -5,7 +5,7 @@ import java.io.IOException;
 
 //import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import frc.team1138.robot.subsystems.LEDSubsystem;
+import frc.team1138.robot.subsystems.RIODuinoSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -18,7 +18,7 @@ import frc.team1138.robot.commands.TestAutonomousCommand;
 import frc.team1138.robot.commands.TurnWithGyro;
 import frc.team1138.robot.subsystems.ExampleSubsystem;
 import frc.team1138.robot.subsystems.SubDriveBase;
-import frc.team1138.robot.subsystems.LEDSubsystem.LEDModes;
+import frc.team1138.robot.subsystems.RIODuinoSubsystem.LEDModes;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,7 +31,7 @@ import frc.team1138.robot.subsystems.LEDSubsystem.LEDModes;
  */
 public class Robot extends IterativeRobot {
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
-	public static LEDSubsystem ledSubsystem = new LEDSubsystem();
+	public static RIODuinoSubsystem rioduinoSubsystem = new RIODuinoSubsystem();
 	public static SubDriveBase SUB_DRIVE_BASE;
 	private static OI oi;
 	private Command autonomousCommand;
